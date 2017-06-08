@@ -68,7 +68,7 @@ var app = {
         // Don't bother if we have nothing to work with
         if (!data.results || !data.results.length) { return; }
 
-        console.log('what');
+        console.log('fetch data', data);
         // Store messages for caching later
         app.messages = data.results;
 

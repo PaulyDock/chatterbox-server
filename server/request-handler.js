@@ -7,18 +7,54 @@ var defaultCorsHeaders = {
   'access-control-max-age': 10 // Seconds.
 };
 
+
+const postBuilder = function(message) {
+  //key value pair with = instead of 
+  //build array split on & (figure escaping/regex)
+  let splitMsg = message.split('&');
+  //map over that array, splitting on = (result is array of tuples)
+  let tuples = splitMsg.map((pair) => {
+    return pair.split('=');
+  });
+  let newMessage = {};
+  tuples.forEach((tuple) => {
+    newMessage[tuple[0]] = tuple[1];
+  });
+  
+  newMessage['createdAt'] = (new Date()).toString();
+  // console.log(newMessage);
+  return newMessage;
+  //iterate over tuples, obj[tuple[0]] = obj  
+};
+
+const routingHandler = function(method, url, message) {
+  endPoint = url.split('?')[0];
+  if (method === 'GET' && endPoint === '/classes/messages') {
+  
+  }
+    // responseBody = entire list of messages
+    //
+
+  if (method === 'POST' && endPoint === '/classes/messages') {
+    postBuilder(message);
+    
+    //push message to entire list of messages
+  }
+};
+
 var requestHandler = function(request, response) {
 
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
   //console.log('request.header: ', request.headers);
   // ********** request builder ************
-
   var method = request.method;
-  
   var url = request.url;
-  
-  var initial = [{username: 'boy', text: 'fake text is best text'}];
+    
+
+  var initial = [{username: 'boy', text: 'fake text is best text', createdAt: new Date, roomname: 'emoroom'}];
+
   var body = [];
+
   request.on('data', function(data) {
     console.log('datas', data.toString('utf8'));
     body.push(data);
