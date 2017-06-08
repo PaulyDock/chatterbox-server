@@ -11,35 +11,30 @@ var requestHandler = function(request, response) {
 
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
   //console.log('request.header: ', request.headers);
-  //console.log('response: ', response);
   // ********** request builder ************
 
   var method = request.method;
   
   var url = request.url;
   
-  var results = [request.data];
-  
-  
-  // request.on('error', function(err) {
-  //   console.error(err);
-  // }).on('data', function(chunk) {
-  //   body.push(chunk);
-  // }).on('end', function() {
-  //   body = Buffer.concat(body).toString();
-  // });
+  var initial = [{username: 'boy', text: 'fake text is best text'}];
+  var body = [];
+  request.on('data', function(data) {
+    console.log('datas', data.toString('utf8'));
+    body.push(data);
+  });
   
   // response.statusCode = 404 to tell the client resource wasn't found
-  
+  // request.on('data', function(chunk) {
+  //   console.log('chunk',chunk);
+  // });
 
-
-  
   // ---------------------------------------
   // The outgoing status.
   var statusCode = 200;
 
   if (request.method === 'POST') {
-    
+    // results.push();
     statusCode = 201;
   }
 
@@ -50,7 +45,7 @@ var requestHandler = function(request, response) {
   //
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = 'text/plain';
+  headers['Content-Type'] = 'application/json';
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
@@ -65,7 +60,7 @@ var requestHandler = function(request, response) {
     headers: headers,
     method: method,
     url: url,
-    results: results
+    results: initial
   };
   
   response.end(JSON.stringify(responseBody));

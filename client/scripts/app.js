@@ -43,6 +43,7 @@ var app = {
       url: app.server,
       type: 'POST',
       data: message,
+      contentType: 'application/json',
       success: function (data) {
         // Clear messages input
         app.$message.val('');
@@ -62,12 +63,12 @@ var app = {
       url: app.server,
       type: 'GET',
       data: { order: '-createdAt' },
-      // contentType: 'application/json',
       contentType: 'application/json',
       success: function(data) {
         // Don't bother if we have nothing to work with
         if (!data.results || !data.results.length) { return; }
 
+        console.log('what');
         // Store messages for caching later
         app.messages = data.results;
 
