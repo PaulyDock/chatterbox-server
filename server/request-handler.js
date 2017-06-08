@@ -10,23 +10,24 @@ var defaultCorsHeaders = {
 var requestHandler = function(request, response) {
 
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
-  console.log('request.header: ', request.headers);
-  // console.log('response: ', response);
+  //console.log('request.header: ', request.headers);
+  //console.log('response: ', response);
   // ********** request builder ************
 
   var method = request.method;
   
   var url = request.url;
   
-  var body = [];
+  var results = [request.data];
   
-  request.on('error', function(err) {
-    console.error(err);
-  }).on('data', function(chunk) {
-    body.push(chunk);
-  }).on('end', function() {
-    body = Buffer.concat(body).toString();
-  });
+  
+  // request.on('error', function(err) {
+  //   console.error(err);
+  // }).on('data', function(chunk) {
+  //   body.push(chunk);
+  // }).on('end', function() {
+  //   body = Buffer.concat(body).toString();
+  // });
   
   // response.statusCode = 404 to tell the client resource wasn't found
   
@@ -36,6 +37,11 @@ var requestHandler = function(request, response) {
   // ---------------------------------------
   // The outgoing status.
   var statusCode = 200;
+
+  if (request.method === 'POST') {
+    
+    statusCode = 201;
+  }
 
   // See the note below about CORS headers.
   var headers = defaultCorsHeaders;
@@ -51,14 +57,20 @@ var requestHandler = function(request, response) {
   response.writeHead(statusCode, headers);
   
   // *******WRITING THE RESPONSE SCHTUFF********
+  response.on('error', function(err) {
+    console.error(err);
+  });
   
+  var responseBody = {
+    headers: headers,
+    method: method,
+    url: url,
+    results: results
+  };
   
-  
-  
-  
-  
-  
-  
+  response.end(JSON.stringify(responseBody));
+  console.log('request.method: ', request.method);
+  console.log('responsebody: ', responseBody);
   
   
   // Make sure to always call response.end() - Node may not send
@@ -68,7 +80,7 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  response.end('Hello, World!asdasdasdsad');
+  // response.end('Hello, World!asdasdasdsad');
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
