@@ -30,9 +30,9 @@ var app = {
     app.fetch(false);
 
     // Poll for new messages
-    setInterval(function() {
-      app.fetch(true);
-    }, 10000);
+    // setInterval(function() {
+    //   app.fetch(true);
+    // }, 10000);
   },
 
   send: function(message) {
@@ -42,7 +42,7 @@ var app = {
     $.ajax({
       url: app.server,
       type: 'POST',
-      data: message,
+      data: JSON.stringify(message),
       contentType: 'application/json',
       success: function (data) {
         // Clear messages input
@@ -58,11 +58,11 @@ var app = {
   },
 
   fetch: function(animate) {
-    console.log('fetch');
     $.ajax({
       url: app.server,
       type: 'GET',
-      data: { order: '-createdAt' },
+      //data: { order: '-createdAt' },
+      data: {},
       contentType: 'application/json',
       success: function(data) {
         // Don't bother if we have nothing to work with
